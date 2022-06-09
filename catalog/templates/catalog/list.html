@@ -1,0 +1,16 @@
+{% extends "layouts/layout.html" %}
+{% block title %}
+    List Category
+{% endblock title %}
+{% block content %}
+ <h4><small>List Catalogs</small></h4>
+  <hr>
+  {% if catalogs %}
+    {% for catalog in catalogs %}
+      <h2>{{catalog.name}}</h2>
+      <p>{{catalog.email}}</p>      
+    {% endfor %}
+  {% else %}
+    Data empty.
+  {% endif %}
+{% endblock content %}

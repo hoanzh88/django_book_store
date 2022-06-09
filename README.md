@@ -258,8 +258,7 @@ class ListPostView(ListView):
   def get (self, request, *args, **kwargs):
     template_name = 'catalog/list.html'
     obj = {
-      # 'catalog': Catalog.objects.all()
-      'catalog': ''
+      'catalog': Catalog.objects.all()
     }
     return render(request, template_name, obj)
 ```
@@ -271,7 +270,16 @@ Add template: django_book_store\catalog\templates\catalog\list.html
     List Category
 {% endblock title %}
 {% block content %}
-List
+ <h4><small>List Catalogs</small></h4>
+  <hr>
+  {% if catalogs %}
+    {% for catalog in catalogs %}
+      <h2>{{catalog.name}}</h2>
+      <p>{{catalog.email}}</p>      
+    {% endfor %}
+  {% else %}
+    Data empty.
+  {% endif %}
 {% endblock content %}
 ```
 
@@ -298,5 +306,12 @@ Mở comment line ```from .models import Catalog```
 ```
 python manage.py makemigrations
 python manage.py migrate
+```
+
+### Login Required
+django_book_store\catalog\views.py
+```
+from django.contrib.auth.mixins import LoginRequiredMixin
+class ListPostView(LoginRequiredMixin, ListView):
 ```
 
