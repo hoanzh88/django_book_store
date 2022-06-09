@@ -32,6 +32,9 @@ import os
 TEMPLATES = [
       {
        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+	  }
+	]
+LOGIN_REDIRECT_URL  = '/'
 ```
 
 ### Login template
@@ -109,6 +112,89 @@ TEMPLATES = [
 ```
 
 Chạy login thử ```http://localhost:8000/accounts/login/```
+
+### Logout template
+Vào thử link ```http://localhost:8000/accounts/logout/``` sẽ thấy trang defautl
+
+\django_book_store\templates\registration\logged_out.html
+```
+{% extends "base_generic.html" %}
+{% block content %}
+  <p>Logged out!</p>
+  <a href="{% url 'login'%}">Click here to login again.</a>
+{% endblock %}
+```
+Vào thử link ```http://localhost:8000/accounts/logout/``` sẽ thấy trang layout mới
+
+### Password reset form
+\django_book_store\templates\registration\logged_out.html
+```
+{% extends "base_generic.html" %}
+{% block content %}
+  <p>Logged out!</p>
+  <a href="{% url 'login'%}">Click here to login again.</a>
+{% endblock %}
+```
+chạy thử ```http://localhost:8000/accounts/password_reset/```
+
+\django_book_store\templates\registration\password_reset_done.html
+```
+{% extends "base_generic.html" %}
+{% block content %}
+  <p>We've emailed you instructions for setting your password. If they haven't arrived in a few minutes, check your spam folder.</p>
+{% endblock %}
+```
+
+\django_book_store\templates\registration\password_reset_email.html
+```
+Someone asked for password reset for email {{ email }}. Follow the link below:
+{{ protocol}}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}
+```
+
+\django_book_store\templates\registration\password_reset_confirm.html
+```
+{% extends "base_generic.html" %}
+
+{% block content %}
+    {% if validlink %}
+        <p>Please enter (and confirm) your new password.</p>
+        <form action="" method="post">
+        {% csrf_token %}
+            <table>
+                <tr>
+                    <td>{{ form.new_password1.errors }}
+                        <label for="id_new_password1">New password:</label></td>
+                    <td>{{ form.new_password1 }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form.new_password2.errors }}
+                        <label for="id_new_password2">Confirm password:</label></td>
+                    <td>{{ form.new_password2 }}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="Change my password" /></td>
+                </tr>
+            </table>
+        </form>
+    {% else %}
+        <h1>Password reset failed</h1>
+        <p>The password reset link was invalid, possibly because it has already been used. Please request a new password reset.</p>
+    {% endif %}
+{% endblock %}
+```
+
+\django_book_store\templates\registration\password_reset_complete.html
+```
+{% extends "base_generic.html" %}
+{% block content %}
+  <h1>The password has been changed!</h1>
+  <p><a href="{% url 'login' %}">log in again?</a></p>
+{% endblock %}
+```
+
+
+
 
 
 
