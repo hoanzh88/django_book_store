@@ -11,6 +11,24 @@ python manage.py migrate
 Chạy thử:
 ```python manage.py runserver```
 
+### Cấu hình database MySql
+\django_book_store\book_store\settings.py
+```
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django_category',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
+```
+```
+python manage.py migrate
+```
+
 ### Creating a superuser
 ```python manage.py createsuperuser```
 
@@ -193,8 +211,92 @@ Someone asked for password reset for email {{ email }}. Follow the link below:
 {% endblock %}
 ```
 
+### Code chức năng catalog
+```python manage.py startapp catalog```
 
+django_book_store\book_store\settings.py
+```
+INSTALLED_APPS = [
+    'catalog',
+```
 
+django_book_store\book_store\urls.py
+```
+path('catalog/', include('catalog.urls')),	
+```
 
+add file \django_book_store\catalog\urls.py
+```
+from django.urls import path
+from django.contrib import admin
+from catalog.views import (
+  ListPostView,
+  # CreatePostView,
+  # UpdatePostView,
+)
+from . import views
+app_name = 'catalog'
+urlpatterns = [
+    path('list-catalog', ListPostView.as_view(), name='list-catalog'),
+    # path('create-catalog', CreatePostView.as_view(), name='create-catalog'),
+    # path('^update-catalog/(?P<pk>[-\w]+)$', UpdatePostView.as_view(), name='update-catalog'),
+    # path('^delete-catalog/(?P<pk>[-\w]+)$', views.delete_post, name='delete-catalog'),
+]
+```
 
+\django_book_store\catalog\views.py
+```
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, CreateView, UpdateView
+# from .models import Catalog
+# from .forms import CreatePostForm
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse
+
+class ListPostView(ListView):
+  # model = Catalog
+  def get (self, request, *args, **kwargs):
+    template_name = 'catalog/list.html'
+    obj = {
+      # 'catalog': Catalog.objects.all()
+      'catalog': ''
+    }
+    return render(request, template_name, obj)
+```
+
+Add template: django_book_store\catalog\templates\catalog\list.html
+```
+{% extends "layouts/layout.html" %}
+{% block title %}
+    List Category
+{% endblock title %}
+{% block content %}
+List
+{% endblock content %}
+```
+
+Add template: django_book_store\catalog\templates\layouts\layout.html
+
+django_book_store\catalog\models.py
+```
+from django.db import models
+
+# Create your models here.
+class Catalog(models.Model):
+	email = models.CharField(max_length = 50)
+	name = models.CharField(max_length = 50)
+
+	class Meta:
+		db_table = "catalog"
+
+	def __str__(self):
+		return self.ename
+```
+
+django_book_store\catalog\views.py
+Mở comment line ```from .models import Catalog```
+```
+python manage.py makemigrations
+python manage.py migrate
+```
 
