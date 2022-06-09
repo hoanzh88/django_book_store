@@ -73,13 +73,11 @@ TEMPLATES = [
 \django_book_store\templates\registration\login.html
 ```
 {% extends "base_generic.html" %}
-
+{% block title %}Login page{% endblock %}
 {% block content %}
-
   {% if form.errors %}
     <p>Your username and password didn't match. Please try again.</p>
   {% endif %}
-
   {% if next %}
     {% if user.is_authenticated %}
       <p>Your account doesn't have access to this page. To proceed,
@@ -107,9 +105,10 @@ TEMPLATES = [
 
   {# Assumes you setup the password_reset view in your URLconf #}
   <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
-
 {% endblock %}
 ```
 
 Chạy login thử ```http://localhost:8000/accounts/login/```
+
+
 
